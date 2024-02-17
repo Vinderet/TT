@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Question: {{ question.text }}</title>
+</head>
+<body>
+    <h2>Question: {{ question.text }}</h2>
+    <form method="post" class="question-form">
+        {% csrf_token %}
+        {% for answer in question.answer_set.all %}
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="answer_{{ question.id }}" id="answer_{{ answer.id }}" value="{{ answer.id }}" {% if answer == selected_answer %}checked{% endif %}>
+                <label class="form-check-label" for="answer_{{ answer.id }}">
+                    {{ answer.text }}
+                </label>
+            </div>
+        {% endfor %}
+        <input type="hidden" name="question_id" value="{{ question.id }}">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</body>
+</html>

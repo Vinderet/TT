@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tests List</title>
+</head>
+<body>
+    <h1>Available Tests</h1>
+    <ul>
+        {% for test_set in test_sets %}
+            <li><a href="{% url 'take_test' test_set.id %}">{{ test_set.title }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

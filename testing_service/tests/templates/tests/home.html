@@ -1,0 +1,26 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to our testing service!</h1>
+
+    {% if user.is_authenticated %}
+        <p>Hello, {{ user.username }}!</p>
+        <a href="{% url 'tests_list' %}">Start taking tests</a>
+    {% else %}
+        <p>Please <a href="{% url 'login' %}">log</a> in or <a href="{% url 'register' %}">register</a> to start taking tests.</p>
+    {% endif %}
+    {% if request.user.is_staff %}
+    <p>or</p>
+    <a href="{% url 'admin:index' %}">Go to the admin panel</a>
+    {% endif %}
+</body>
+</html>

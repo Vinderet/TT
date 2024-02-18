@@ -20,6 +20,11 @@ class TestSetAdmin(admin.ModelAdmin):
 
     get_description.short_description = 'Description'
 
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "questions":
+            kwargs["required"] = False
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
+
 
 admin.site.register(TestSet, TestSetAdmin)
 

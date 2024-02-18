@@ -77,7 +77,8 @@ def take_test(request, test_set_id):
                 if selected_answer_id == str(correct_answer.id):
                     correct_answers += 1
 
-            return redirect('test_result', test_set_id=test_set_id, correct_answers=correct_answers, total_questions=total_questions)
+            return redirect('test_result', test_set_id=test_set_id, correct_answers=correct_answers,
+                            total_questions=total_questions)
     else:
         form = TestForm(test_set=test_set, questions=questions)
 

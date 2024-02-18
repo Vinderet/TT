@@ -36,8 +36,3 @@ class TestForm(forms.Form):
             question = Question.objects.get(id=question_id.split('_')[1])
             correct_answer = question.answer_set.filter(is_correct=True).first()
         return cleaned_data
-
-
-
-
-

@@ -9,7 +9,6 @@ class User(AbstractUser):
     )
 
     class Meta:
-
         permissions = [
             ("can_view_group", "Can view group"),
         ]

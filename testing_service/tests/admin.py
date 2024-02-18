@@ -47,6 +47,7 @@ class AnswerInlineFormSet(BaseInlineFormSet):
         if correct_answers_count < 1 or incorrect_answers_count < 1:
             raise ValidationError("Необходимо добавить как минимум один правильный и один неправильный ответ.")
 
+
 class AnswerInline(admin.TabularInline):
     model = Answer
     extra = 4  # Количество дополнительных форм для ответов
@@ -54,9 +55,10 @@ class AnswerInline(admin.TabularInline):
     max_num = 4  # Максимальное количество ответов
     formset = AnswerInlineFormSet  # Использование пользовательской формы набора ответов
 
+
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ['text', 'test_set']
     inlines = [AnswerInline]
 
-admin.site.register(Question, QuestionAdmin)
 
+admin.site.register(Question, QuestionAdmin)

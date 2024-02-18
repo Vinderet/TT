@@ -1,5 +1,3 @@
-# В файле admin.py вашего приложения
-
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
@@ -10,16 +8,19 @@ class TestSetAdmin(admin.ModelAdmin):
     # Определение полей, отображаемых в административной панели
     list_display = ['title']
 
+    # Краткое название
     def get_name(self, obj):
         return obj.name
 
     get_name.short_description = 'Name'
 
+    # Краткое описание
     def get_description(self, obj):
         return obj.description
 
     get_description.short_description = 'Description'
 
+    # Обработка множественных выборов
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "questions":
             kwargs["required"] = False
@@ -30,6 +31,7 @@ admin.site.register(TestSet, TestSetAdmin)
 
 
 class AnswerInlineFormSet(BaseInlineFormSet):
+    # Проверка правильности ответов перед сохранением
     def clean(self):
         super().clean()
 
@@ -50,10 +52,14 @@ class AnswerInlineFormSet(BaseInlineFormSet):
 
 class AnswerInline(admin.TabularInline):
     model = Answer
-    extra = 4  # Количество дополнительных форм для ответов
-    min_num = 4  # Минимальное количество ответов
-    max_num = 4  # Максимальное количество ответов
-    formset = AnswerInlineFormSet  # Использование пользовательской формы набора ответов
+    # Количество дополнительных форм для ответов
+    extra = 4
+    # Минимальное количество ответов
+    min_num = 4
+    # Максимальное количество ответов
+    max_num = 4
+    # Использование пользовательской формы набора ответов
+    formset = AnswerInlineFormSet
 
 
 class QuestionAdmin(admin.ModelAdmin):

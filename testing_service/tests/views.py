@@ -1,6 +1,5 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-
 from .forms import UserRegistrationForm, TestForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
@@ -9,22 +8,26 @@ from .models import TestSet, Question
 
 
 def home(request):
+    # Получение всех наборов тестов
     test_sets = TestSet.objects.all()
     return render(request, 'tests/home.html', {'test_sets': test_sets})
 
 
 def tests_list(request):
+    # Получение всех наборов тестов
     test_sets = TestSet.objects.all()
     return render(request, 'tests/tests_list.html', {'test_sets': test_sets})
 
 
 def register(request):
     if request.method == 'POST':
+        # Обработка формы регистрации при отправке
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
+            # Аутентификация после регистрации
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
@@ -41,6 +44,7 @@ def register(request):
 
 def user_login(request):
     if request.method == 'POST':
+        # Обработка запроса на вход пользователя
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
@@ -53,24 +57,24 @@ def user_login(request):
 
 
 def user_logout(request):
+    # Выход пользователя из системы
     logout(request)
     return redirect('home')
 
 
 def take_test(request, test_set_id):
+    # Получение набора тестов и связанных с ним вопросов
     test_set = TestSet.objects.get(id=test_set_id)
     questions = Question.objects.filter(test_set=test_set)
 
-    print("Test set:", test_set)
-    print("Questions:", questions)
-
     if request.method == 'POST':
+        # Обработка отправленной формы теста
         form = TestForm(request.POST, test_set=test_set, questions=questions)
         if form.is_valid():
             correct_answers = 0
             total_questions = questions.count()
 
-            # Подсчитываем количество правильных ответов
+            # Подсчет правильных ответов
             for question in questions:
                 selected_answer_id = form.cleaned_data[f'question_{question.id}']
                 correct_answer = question.answer_set.filter(is_correct=True).first()
@@ -93,6 +97,7 @@ def take_test(request, test_set_id):
 
 
 def test_result(request, test_set_id, correct_answers, total_questions):
+    # Получение результатов теста
     test_set = get_object_or_404(TestSet, id=test_set_id)
     percentage_correct = round((correct_answers / total_questions) * 100 if total_questions != 0 else 0, 2)
     incorrect_answers = total_questions - correct_answers

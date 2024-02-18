@@ -15,7 +15,9 @@ class User(AbstractUser):
 
 
 class TestSet(models.Model):
+    # Название теста
     title = models.CharField(max_length=100)
+    # Вопросы теста
     questions = models.ManyToManyField('Question', related_name='test_sets')
 
     def __str__(self):
@@ -23,7 +25,9 @@ class TestSet(models.Model):
 
 
 class Question(models.Model):
+    # Тест, к которому относится вопрос
     test_set = models.ForeignKey(TestSet, on_delete=models.CASCADE)
+    # Текст вопроса
     text = models.CharField(max_length=255)
 
     def __str__(self):
@@ -31,8 +35,11 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
+    # Вопрос, к которому относится ответ
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    # Текст ответа
     text = models.CharField(max_length=255)
+    # Флаг правильного ответа
     is_correct = models.BooleanField(default=False)
 
     def __str__(self):

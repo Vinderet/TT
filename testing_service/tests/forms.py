@@ -14,10 +14,13 @@ class UserRegistrationForm(UserCreationForm):
 
 class TestForm(forms.Form):
     def __init__(self, *args, **kwargs):
+        # Получение вопросов из kwargs
         questions = kwargs.pop('questions', None)
-        kwargs.pop('test_set', None)  # Убираем аргумент test_set из kwargs
+        # Убираем аргумент test_set из kwargs
+        kwargs.pop('test_set', None)
         super(TestForm, self).__init__(*args, **kwargs)
 
+        # Добавление полей для вопросов и выбора ответов
         if questions is not None:
             for question in questions:
                 choices = [(answer.id, answer.text) for answer in question.answer_set.all()]

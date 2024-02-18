@@ -3,7 +3,6 @@
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
-
 from .models import TestSet, Question, Answer
 
 

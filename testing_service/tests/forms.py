@@ -1,8 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
-from .models import Question
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -16,7 +14,7 @@ class UserRegistrationForm(UserCreationForm):
 class TestForm(forms.Form):
     def __init__(self, *args, **kwargs):
         questions = kwargs.pop('questions', None)
-        kwargs.pop('test_set', None)  # Убираем аргумент test_set из kwargs
+        kwargs.pop('test_set', None)
         super(TestForm, self).__init__(*args, **kwargs)
 
         if questions is not None:
@@ -31,11 +29,8 @@ class TestForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        questions = [field_name for field_name in cleaned_data if field_name.startswith('question_')]
-        for question_id in questions:
-            selected_answer_id = cleaned_data[question_id]
-            question = Question.objects.get(id=question_id.split('_')[1])
-            correct_answer = question.answer_set.filter(is_correct=True).first()
+        # Remove the 'current_question_index' field from the cleaned data
+        cleaned_data.pop('current_question_index', None)
         return cleaned_data
 
 

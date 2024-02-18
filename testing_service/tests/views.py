@@ -1,8 +1,9 @@
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 from .forms import UserRegistrationForm, TestForm
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import TestSet, Question
 
@@ -21,8 +22,18 @@ def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('home')
+            user = form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'Регистрация прошла успешно. Теперь вы вошли в систему.')
+                return HttpResponseRedirect(reverse('home'))
+            else:
+                messages.error(request, 'Ошибка аутентификации после регистрации.')
+        else:
+            messages.error(request, 'Ошибка регистрации. Пожалуйста, проверьте данные и повторите попытку.')
     else:
         form = UserRegistrationForm()
     return render(request, 'tests/register.html', {'form': form})
@@ -35,13 +46,15 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            # Перенаправляем пользователя на домашнюю страницу или куда-то еще после входа
-            return redirect('home')
+            return HttpResponseRedirect(reverse('home'))
         else:
             messages.error(request, 'Invalid username or password.')
     return render(request, 'tests/login.html')
 
 
+def user_logout(request):
+    logout(request)
+    return redirect('home')
 
 
 def take_test(request, test_set_id):
